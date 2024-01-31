@@ -37,12 +37,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         UserDetails userDetails = jwtUtil.parseAccessToken(token);
 
         if (userDetails == null) {
-            ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
-                    new Date(),
-                    HttpStatus.UNAUTHORIZED.value(),
-                    "JWT access token is invalid",
-                    request.getRequestURI()
-            );
+            ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
+            errorResponseDTO.setTimestamp(new Date());
+            errorResponseDTO.setStatus(HttpStatus.UNAUTHORIZED.value());
+            errorResponseDTO.setError("JWT access token is not valid");
+            errorResponseDTO.setPath(request.getRequestURI());
 
             response.setContentType("application/json");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());

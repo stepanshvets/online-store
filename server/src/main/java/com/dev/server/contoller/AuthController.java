@@ -41,6 +41,7 @@ public class AuthController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout (@RequestParam(required = false, defaultValue = "false") boolean full,
                         @RequestBody RefreshRequestDTO refreshRequestDTO) {
+        //todo: change to auth request
         if (full) {
             authService.logoutFull(refreshRequestDTO);
         }

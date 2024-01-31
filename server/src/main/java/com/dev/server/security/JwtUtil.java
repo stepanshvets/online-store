@@ -60,7 +60,13 @@ public class JwtUtil {
             return null;
         }
 
-        return userDetailsService.loadUserByUsername(claims.getSubject());
+        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(claims.getSubject());
+
+        if (userDetails.getUser() == null) {
+            return null;
+        }
+
+        return userDetails;
     }
 
     public UserDetails parseAccessToken(String token) {
