@@ -1,7 +1,7 @@
 package com.dev.server.contoller;
 
 import com.dev.server.dto.ErrorResponseDTO;
-import com.dev.server.service.GeneralException;
+import com.dev.server.exception.GeneralException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

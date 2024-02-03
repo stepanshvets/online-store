@@ -1,8 +1,5 @@
 package com.dev.server.security;
 
-import com.dev.server.model.Role;
-import com.dev.server.model.User;
-import com.dev.server.service.AuthService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

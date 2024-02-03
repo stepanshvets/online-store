@@ -1,4 +1,4 @@
-package com.dev.server.service;
+package com.dev.server.exception;
 
 import org.springframework.http.HttpStatus;
 
