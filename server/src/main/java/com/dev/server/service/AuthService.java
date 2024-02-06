@@ -24,8 +24,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
 
 @Service
+@Validated
 @RequiredArgsConstructor
 public class AuthService {
     private final UserRepository userRepository;
@@ -34,7 +38,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthResponseDTO login(AuthRequestDTO authRequestDTO) {
+    public AuthResponseDTO login(@Valid AuthRequestDTO authRequestDTO) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     authRequestDTO.getEmail(), authRequestDTO.getPassword()));
@@ -54,7 +58,7 @@ public class AuthService {
         }
     }
 
-    public AuthResponseDTO refresh(RefreshRequestDTO refreshRequestDTO) {
+    public AuthResponseDTO refresh(@Valid RefreshRequestDTO refreshRequestDTO) {
         UserDetails userDetails = jwtUtil.parseRefreshToken(refreshRequestDTO.getRefreshToken());
         if (userDetails == null) {
             throw new GeneralException("JWT refresh is not valid", HttpStatus.UNAUTHORIZED);
@@ -72,7 +76,7 @@ public class AuthService {
     }
 
 
-    public void register(RegisterRequestDTO registerRequestDTO) {
+    public void register(@Valid RegisterRequestDTO registerRequestDTO) {
         if (userRepository.findByEmail(registerRequestDTO.getEmail()).isPresent())
             throw new UsernameAlreadyExists(registerRequestDTO.getEmail());
 
@@ -87,7 +91,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void logout(RefreshRequestDTO refreshRequestDTO) {
+    public void logout(@Valid RefreshRequestDTO refreshRequestDTO) {
         if (tokenRepository.deleteByRefreshToken(
                 refreshRequestDTO.getRefreshToken()).isPresent()) {
             SecurityContextHolder.getContext().setAuthentication(null);
@@ -95,7 +99,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void logoutFull(RefreshRequestDTO refreshRequestDTO) {
+    public void logoutFull(@Valid RefreshRequestDTO refreshRequestDTO) {
         Token token = tokenRepository.findByRefreshToken(refreshRequestDTO.getRefreshToken()).orElse(null);
         if (token != null && tokenRepository.deleteByUser(token.getUser()) > 0) {
             SecurityContextHolder.getContext().setAuthentication(null);

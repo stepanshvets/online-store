@@ -7,13 +7,22 @@ import com.dev.server.dto.RegisterRequestDTO;
 import com.dev.server.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.Email;
 
 @RestController
 @RequestMapping("/auth")
+@Validated
 @AllArgsConstructor
 public class AuthController {
     private final AuthService authService;
+
+    @GetMapping("/req")
+    public String req(@RequestParam(required = false) @Email String email) {
+        return email;
+    }
 
     @PostMapping("/login")
     public AuthResponseDTO login(@RequestBody AuthRequestDTO authRequestDTO) {
