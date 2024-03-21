@@ -45,11 +45,11 @@ public class FileSystemStorageService {
         }
     }
 
-    public void save(MultipartFile file, Path directoryPath, String fileName) {
-        save(file, directoryPath, fileName, defaultValidator);
+    public Path save(MultipartFile file, Path directoryPath, String fileName) {
+        return save(file, directoryPath, fileName, defaultValidator);
     }
 
-    public void save(MultipartFile file, Path directoryPath, String fileName, FileValidator fileValidator) {
+    public Path save(MultipartFile file, Path directoryPath, String fileName, FileValidator fileValidator) {
         try {
             fileValidator.validate(file);
 
@@ -59,6 +59,8 @@ public class FileSystemStorageService {
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
             }
+
+            return destinationFile;
         }
         catch (IOException e) {
             throw new RuntimeException("Failed to store file", e);
