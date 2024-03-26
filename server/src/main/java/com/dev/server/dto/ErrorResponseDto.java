@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class ErrorResponseDTO {
+public class ErrorResponseDto {
     private Date timestamp;
     private Integer status;
     private String error;

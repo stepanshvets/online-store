@@ -1,8 +1,7 @@
 package com.dev.server.service;
 
-import com.dev.server.dto.ProductDTO;
+import com.dev.server.dto.ProductDto;
 import com.dev.server.exception.GeneralException;
-import com.dev.server.model.Category;
 import com.dev.server.model.Product;
 import com.dev.server.repository.CategoryRepository;
 import com.dev.server.repository.ProductRepository;
@@ -15,13 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -46,7 +43,7 @@ public class ProductService {
         priceMax = (priceMax == null) ? Double.MAX_VALUE : priceMax;
 
         Sort sort;
-        if (order.equals("price.desc")) {
+        if (order != null && order.equals("price.desc")) {
             sort = Sort.by(Sort.Direction.DESC, "price");
         }
         else {
@@ -61,7 +58,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product save(@Valid ProductDTO productDTO) {
+    public Product save(@Valid ProductDto productDTO) {
         Product product = new Product();
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());
@@ -75,7 +72,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product put(Long id, @Valid ProductDTO productDTO) {
+    public Product put(Long id, @Valid ProductDto productDTO) {
         Product updatedProduct = productRepository.findById(id)
                 .orElseThrow(() -> new GeneralException("Product not found", HttpStatus.BAD_REQUEST));
 
@@ -96,7 +93,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product patch(Long id, ProductDTO productDTO) {
+    public Product patch(Long id, ProductDto productDTO) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new GeneralException("Product not found", HttpStatus.BAD_REQUEST));
 
@@ -109,7 +106,7 @@ public class ProductService {
         if (productDTO.getCount() != null) {
             product.setCount(productDTO.getCount());
         }
-        if (productDTO.getCount() != null) {
+        if (productDTO.getDescription() != null) {
             product.setDescription(productDTO.getDescription());
         }
         if (productDTO.getCategoryId() != null) {

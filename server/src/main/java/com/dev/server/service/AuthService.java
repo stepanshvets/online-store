@@ -1,9 +1,9 @@
 package com.dev.server.service;
 
-import com.dev.server.dto.AuthRequestDTO;
-import com.dev.server.dto.AuthResponseDTO;
-import com.dev.server.dto.RefreshRequestDTO;
-import com.dev.server.dto.RegisterRequestDTO;
+import com.dev.server.dto.AuthRequestDto;
+import com.dev.server.dto.AuthResponseDto;
+import com.dev.server.dto.RefreshRequestDto;
+import com.dev.server.dto.RegisterRequestDto;
 import com.dev.server.exception.GeneralException;
 import com.dev.server.exception.UsernameAlreadyExists;
 import com.dev.server.model.Role;
@@ -38,7 +38,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthResponseDTO login(@Valid AuthRequestDTO authRequestDTO) {
+    public AuthResponseDto login(@Valid AuthRequestDto authRequestDTO) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     authRequestDTO.getEmail(), authRequestDTO.getPassword()));
@@ -52,13 +52,13 @@ public class AuthService {
             String refreshToken = jwtUtil.generateRefreshToken(userDetails);
             Token token = new Token(refreshToken, user);
             tokenRepository.save(token);
-            return new AuthResponseDTO(accessToken, refreshToken);
+            return new AuthResponseDto(accessToken, refreshToken);
         } catch (BadCredentialsException | UsernameNotFoundException e) {
             throw new GeneralException("Not valid email or password", HttpStatus.UNAUTHORIZED);
         }
     }
 
-    public AuthResponseDTO refresh(@Valid RefreshRequestDTO refreshRequestDTO) {
+    public AuthResponseDto refresh(@Valid RefreshRequestDto refreshRequestDTO) {
         UserDetails userDetails = jwtUtil.parseRefreshToken(refreshRequestDTO.getRefreshToken());
         if (userDetails == null) {
             throw new GeneralException("JWT refresh is not valid", HttpStatus.UNAUTHORIZED);
@@ -72,11 +72,11 @@ public class AuthService {
         token.setRefreshToken(newRefreshToken);
         tokenRepository.save(token);
 
-        return new AuthResponseDTO(accessToken, newRefreshToken);
+        return new AuthResponseDto(accessToken, newRefreshToken);
     }
 
 
-    public void register(@Valid RegisterRequestDTO registerRequestDTO) {
+    public void register(@Valid RegisterRequestDto registerRequestDTO) {
         if (userRepository.findByEmail(registerRequestDTO.getEmail()).isPresent())
             throw new UsernameAlreadyExists(registerRequestDTO.getEmail());
 
@@ -91,7 +91,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void logout(@Valid RefreshRequestDTO refreshRequestDTO) {
+    public void logout(@Valid RefreshRequestDto refreshRequestDTO) {
         if (tokenRepository.deleteByRefreshToken(
                 refreshRequestDTO.getRefreshToken()).isPresent()) {
             SecurityContextHolder.getContext().setAuthentication(null);
@@ -99,7 +99,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void logoutFull(@Valid RefreshRequestDTO refreshRequestDTO) {
+    public void logoutFull(@Valid RefreshRequestDto refreshRequestDTO) {
         Token token = tokenRepository.findByRefreshToken(refreshRequestDTO.getRefreshToken()).orElse(null);
         if (token != null && tokenRepository.deleteByUser(token.getUser()) > 0) {
             SecurityContextHolder.getContext().setAuthentication(null);

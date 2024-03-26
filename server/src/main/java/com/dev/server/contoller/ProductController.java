@@ -1,8 +1,6 @@
 package com.dev.server.contoller;
 
-import com.dev.server.dto.CategoryDTO;
-import com.dev.server.dto.ProductDTO;
-import com.dev.server.model.Category;
+import com.dev.server.dto.ProductDto;
 import com.dev.server.model.Product;
 import com.dev.server.service.ProductImageService;
 import com.dev.server.service.ProductService;
@@ -26,35 +24,34 @@ public class ProductController {
     private final ProductImageService productImageService;
 
     @GetMapping
-    public List<ProductDTO> get(@RequestParam(required = false) String query,
-                          @RequestParam(required = false) List<Long> categoryIds,
-                          @RequestParam(required = false) Double priceMin,
-                          @RequestParam(required = false) Double priceMax,
-                          @RequestParam(required = false) String order,
-                          @RequestParam(required = false) Integer page,
-                          @RequestParam(required = false) Integer size) {
-        System.out.println(categoryIds);
-        return convertToListProductDTO(productService.get(query, categoryIds, priceMin, priceMax, order, page, size));
+    public List<ProductDto> get(@RequestParam(required = false) String query,
+                                @RequestParam(required = false) List<Long> categoryIds,
+                                @RequestParam(required = false) Double priceMin,
+                                @RequestParam(required = false) Double priceMax,
+                                @RequestParam(required = false) String order,
+                                @RequestParam(required = false) Integer page,
+                                @RequestParam(required = false) Integer size) {
+        return ProductDto.toListDto(productService.get(query, categoryIds, priceMin, priceMax, order, page, size));
     }
 
     @GetMapping("/{id}")
-    public ProductDTO getById(@PathVariable Long id) {
-        return convertToProductDTO(productService.getById(id));
+    public ProductDto getById(@PathVariable Long id) {
+        return ProductDto.toDto(productService.getById(id));
     }
 
     @PostMapping
-    public ProductDTO save(@RequestBody ProductDTO productDTO) {
-        return convertToProductDTO(productService.save(productDTO));
+    public ProductDto save(@RequestBody ProductDto productDTO) {
+        return ProductDto.toDto(productService.save(productDTO));
     }
 
     @PutMapping("/{id}")
-    public ProductDTO put(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
-        return convertToProductDTO(productService.put(id, productDTO));
+    public ProductDto put(@PathVariable Long id, @RequestBody ProductDto productDTO) {
+        return ProductDto.toDto(productService.put(id, productDTO));
     }
 
     @PatchMapping("/{id}")
-    public ProductDTO patch(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
-        return convertToProductDTO(productService.patch(id, productDTO));
+    public ProductDto patch(@PathVariable Long id, @RequestBody ProductDto productDTO) {
+        return ProductDto.toDto(productService.patch(id, productDTO));
     }
 
     @DeleteMapping("/{id}")
@@ -73,31 +70,5 @@ public class ProductController {
     @PostMapping("/{id}/image")
     public void updateMainImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         productImageService.updateMainImage(id, file);
-    }
-
-    protected ProductDTO convertToProductDTO(Product product) {
-        ProductDTO productDTO = new ProductDTO();
-        productDTO.setId(product.getId());
-        productDTO.setName(product.getName());
-        productDTO.setPrice(product.getPrice());
-        productDTO.setCount(product.getCount());
-        productDTO.setDescription(product.getDescription());
-        productDTO.setAvatarPath(product.getAvatarPath());
-//        productDTO.setCategoryDTO(categoryService.convertToCategoryDTO(product.getCategory()));
-        return productDTO;
-    }
-
-    protected List<ProductDTO> convertToListProductDTO(List<Product> list) {
-        return list.stream().map(product -> convertToProductDTO(product))
-                .collect(Collectors.toList());
-    }
-
-    protected Product convertToProduct(ProductDTO productDTO) {
-        Product product = new Product();
-        product.setName(productDTO.getName());
-        product.setPrice(productDTO.getPrice());
-        product.setCount(productDTO.getCount());
-        product.setDescription(productDTO.getDescription());
-        return product;
     }
 }

@@ -10,12 +10,12 @@ import javax.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
-public class RegisterRequestDTO {
+public class RegisterRequestDto {
     @NotBlank
     @Email
     private String email;
 
-    @NotBlank
+
     @Size(min = 8)
     @Password
     private String password;

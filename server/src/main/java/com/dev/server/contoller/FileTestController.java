@@ -28,7 +28,7 @@ public class FileTestController {
         Resource resource = testFileService.get();
 
         return ResponseEntity.ok()
-                //.contentType(MediaType.parseMediaType(Files.probeContentType(resource.getFile().toPath())))
+                .contentType(MediaType.parseMediaType(Files.probeContentType(resource.getFile().toPath())))
                 .body(resource);
 //        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
 //                "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);

@@ -1,6 +1,6 @@
 package com.dev.server.service;
 
-import com.dev.server.dto.CategoryDTO;
+import com.dev.server.dto.CategoryDto;
 import com.dev.server.exception.GeneralException;
 import com.dev.server.model.Category;
 import com.dev.server.repository.CategoryRepository;
@@ -8,13 +8,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
+@Validated
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
@@ -31,7 +31,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public Category save(@Valid CategoryDTO categoryDTO) {
+    public Category save(@Valid CategoryDto categoryDTO) {
         Category category = new Category();
         category.setName(categoryDTO.getName());
 
@@ -43,7 +43,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public Category patch(Long id, @Valid CategoryDTO categoryDTO) {
+    public Category patch(Long id, @Valid CategoryDto categoryDTO) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new GeneralException("Category not found", HttpStatus.BAD_REQUEST));
 

@@ -1,6 +1,6 @@
 package com.dev.server.security;
 
-import com.dev.server.dto.ErrorResponseDTO;
+import com.dev.server.dto.ErrorResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,7 +36,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         UserDetails userDetails = jwtUtil.parseAccessToken(token);
 
         if (userDetails == null) {
-            ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
+            ErrorResponseDto errorResponseDTO = new ErrorResponseDto();
             errorResponseDTO.setTimestamp(new Date());
             errorResponseDTO.setStatus(HttpStatus.UNAUTHORIZED.value());
             errorResponseDTO.setError("JWT access token is not valid");

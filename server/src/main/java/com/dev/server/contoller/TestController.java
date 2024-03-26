@@ -1,11 +1,11 @@
 package com.dev.server.contoller;
 
+import com.dev.server.dto.TestDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,5 +37,11 @@ public class TestController {
         response.put("bar", "ok");
         response.put("time", new Date());
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/test")
+    public void test(@RequestBody @Valid TestDto testDTO) {
+        System.out.println(testDTO);
+//        return testDTO;
     }
 }

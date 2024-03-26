@@ -5,11 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class CategoryDTO {
-    private Long id;
-
+public class RefreshRequestDto {
     @NotBlank
-    private String name;
+    private String refreshToken;
 }
-
-

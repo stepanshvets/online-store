@@ -1,6 +1,6 @@
 package com.dev.server.contoller;
 
-import com.dev.server.dto.ErrorResponseDTO;
+import com.dev.server.dto.ErrorResponseDto;
 import com.dev.server.exception.GeneralException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +18,8 @@ import java.util.Date;
 @RestControllerAdvice
 public class ExceptionController {
     @ExceptionHandler(GeneralException.class)
-    private ResponseEntity<ErrorResponseDTO> handleException(GeneralException e, HttpServletRequest request) {
-        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
+    private ResponseEntity<ErrorResponseDto> handleException(GeneralException e, HttpServletRequest request) {
+        ErrorResponseDto errorResponseDTO = new ErrorResponseDto();
         errorResponseDTO.setTimestamp(new Date());
         errorResponseDTO.setStatus(e.getHttpStatus().value());
         errorResponseDTO.setError(e.getMessage());
@@ -28,7 +28,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    private ResponseEntity<ErrorResponseDTO> handleConstraintViolationException(
+    private ResponseEntity<ErrorResponseDto> handleConstraintViolationException(
             ConstraintViolationException e, HttpServletRequest request) {
 //        Javax
 //        Controller lawyer: @Validated class + @RequestParam @NotBlank param - validate request parameters
@@ -46,7 +46,7 @@ public class ExceptionController {
                     .append(";");
         }
 
-        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
+        ErrorResponseDto errorResponseDTO = new ErrorResponseDto();
         errorResponseDTO.setTimestamp(new Date());
         errorResponseDTO.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponseDTO.setError(message.toString());
@@ -55,7 +55,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    private ResponseEntity<ErrorResponseDTO> handleMethodArgumentNotValidException(
+    private ResponseEntity<ErrorResponseDto> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException e, HttpServletRequest request) {
 //        Spring
 //        Controller lawyer: @Valid dto - validate dto
@@ -64,7 +64,7 @@ public class ExceptionController {
         for (FieldError error: e.getBindingResult().getFieldErrors())
             message.append(error.getField()).append(" ").append(error.getDefaultMessage());
 
-        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
+        ErrorResponseDto errorResponseDTO = new ErrorResponseDto();
         errorResponseDTO.setTimestamp(new Date());
         errorResponseDTO.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponseDTO.setError(message.toString());

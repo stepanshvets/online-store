@@ -1,9 +1,9 @@
 package com.dev.server.contoller;
 
-import com.dev.server.dto.AuthRequestDTO;
-import com.dev.server.dto.AuthResponseDTO;
-import com.dev.server.dto.RefreshRequestDTO;
-import com.dev.server.dto.RegisterRequestDTO;
+import com.dev.server.dto.AuthRequestDto;
+import com.dev.server.dto.AuthResponseDto;
+import com.dev.server.dto.RefreshRequestDto;
+import com.dev.server.dto.RegisterRequestDto;
 import com.dev.server.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,31 +19,26 @@ import javax.validation.constraints.Email;
 public class AuthController {
     private final AuthService authService;
 
-    @GetMapping("/req")
-    public String req(@RequestParam(required = false) @Email String email) {
-        return email;
-    }
-
     @PostMapping("/login")
-    public AuthResponseDTO login(@RequestBody AuthRequestDTO authRequestDTO) {
+    public AuthResponseDto login(@RequestBody AuthRequestDto authRequestDTO) {
         return authService.login(authRequestDTO);
     }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void register (@RequestBody RegisterRequestDTO registerRequestDTO) {
+    public void register (@RequestBody RegisterRequestDto registerRequestDTO) {
         authService.register(registerRequestDTO);
     }
 
     @PostMapping("/refresh")
-    public AuthResponseDTO refresh(@RequestBody RefreshRequestDTO refreshRequestDTO) {
+    public AuthResponseDto refresh(@RequestBody RefreshRequestDto refreshRequestDTO) {
         return authService.refresh(refreshRequestDTO);
     }
 
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout (@RequestParam(required = false, defaultValue = "false") boolean full,
-                        @RequestBody RefreshRequestDTO refreshRequestDTO) {
+                        @RequestBody RefreshRequestDto refreshRequestDTO) {
         //todo: change to auth request
         if (full) {
             authService.logoutFull(refreshRequestDTO);
